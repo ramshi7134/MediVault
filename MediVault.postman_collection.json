@@ -1,0 +1,220 @@
+{
+  "info": {
+    "name": "MediVault API",
+    "description": "Digital Medical Record Management System API Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost/api" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/register",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Rahul Sharma\",\n  \"email\": \"rahul@example.com\",\n  \"phone\": \"+919876543210\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.token) { pm.collectionVariables.set('token', json.token); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/login",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"rahul@example.com\",\n  \"password\": \"password123\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/logout",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ]
+          }
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/profile",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Family Members",
+      "item": [
+        {
+          "name": "List Family Members",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/family-members",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ]
+          }
+        },
+        {
+          "name": "Add Family Member",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/family-members",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Sunita Sharma\",\n  \"relationship\": \"mother\",\n  \"blood_group\": \"A+\",\n  \"gender\": \"female\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Medical Records",
+      "item": [
+        {
+          "name": "Upload Record",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/records/upload",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "title", "value": "Blood Test Report", "type": "text" },
+                { "key": "document_type", "value": "lab", "type": "text" },
+                { "key": "hospital_name", "value": "Apollo Hospital", "type": "text" },
+                { "key": "doctor_name", "value": "Dr. Priya Menon", "type": "text" },
+                { "key": "visit_date", "value": "2024-01-15", "type": "text" },
+                { "key": "tags[]", "value": "blood", "type": "text" },
+                { "key": "file", "type": "file", "src": "" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "List Records",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/records?document_type=lab",
+              "host": ["{{base_url}}"],
+              "path": ["records"],
+              "query": [{ "key": "document_type", "value": "lab" }]
+            },
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ]
+          }
+        },
+        {
+          "name": "Get Record",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/records/1",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ]
+          }
+        },
+        {
+          "name": "Delete Record",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/records/1",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Timeline",
+      "item": [
+        {
+          "name": "Get Timeline",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/timeline",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Share",
+      "item": [
+        {
+          "name": "Create Share Link",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/share/1",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"expires_in_hours\": 48\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "Access Shared Record",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/shared/PASTE_TOKEN_HERE",
+            "header": [{ "key": "Accept", "value": "application/json" }]
+          }
+        }
+      ]
+    }
+  ]
+}
