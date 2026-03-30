@@ -32,6 +32,7 @@ class MedicalRecordController extends Controller
      *   @OA\Parameter(name="from_date", in="query", @OA\Schema(type="string", format="date")),
      *   @OA\Parameter(name="to_date", in="query", @OA\Schema(type="string", format="date")),
      *   @OA\Parameter(name="family_member_id", in="query", @OA\Schema(type="integer")),
+     *   @OA\Parameter(name="group", in="query", @OA\Schema(type="string")),
      *   @OA\Response(response=200, description="Paginated list of records")
      * )
      */
@@ -39,7 +40,7 @@ class MedicalRecordController extends Controller
     {
         $filters = $request->only([
             'document_type', 'doctor_name', 'hospital_name',
-            'from_date', 'to_date', 'family_member_id',
+            'from_date', 'to_date', 'family_member_id', 'group',
         ]);
 
         $records = $this->repository->getForUser($request->user()->id, $filters);
@@ -63,7 +64,8 @@ class MedicalRecordController extends Controller
      *         @OA\Property(property="hospital_name", type="string"),
      *         @OA\Property(property="doctor_name", type="string"),
      *         @OA\Property(property="visit_date", type="string", format="date"),
-     *         @OA\Property(property="family_member_id", type="integer")
+     *         @OA\Property(property="family_member_id", type="integer"),
+     *         @OA\Property(property="group", type="string")
      *       )
      *     )
      *   ),

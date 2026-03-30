@@ -34,5 +34,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/timeline', [TimelineController::class, 'index']);
 
     // Sharing
-    Route::post('/share/{record_id}', [ShareController::class, 'create']);
+    Route::post('/share/group/{group}', [ShareController::class, 'createGroup']);
+    Route::post('/share/{record_id}', [ShareController::class, 'create'])->where('record_id', '[0-9]+');
 });

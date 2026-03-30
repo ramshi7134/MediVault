@@ -18,6 +18,7 @@ class SharedRecord extends Model
         'expires_at',
         'is_active',
         'access_count',
+        'group',
     ];
 
     protected function casts(): array
