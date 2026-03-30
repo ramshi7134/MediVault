@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: medivault_app
+    restart: unless-stopped
+    volumes:
+      - .:/var/www
+      - ./storage:/var/www/storage
+    environment:
+      - APP_ENV=production
+    networks:
+      - medivault_network
+    depends_on:
+      - db
+      - redis
+
+  nginx:
+    image: nginx:alpine
+    container_name: medivault_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - .:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - medivault_network
+    depends_on:
+      - app
+
+  db:
+    image: mysql:8.0
+    container_name: medivault_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: medivault
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_USER: medivault
+      MYSQL_PASSWORD: secret
+    volumes:
+      - medivault_db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - medivault_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: medivault_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - medivault_network
+
+  queue:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: medivault_queue
+    restart: unless-stopped
+    command: php artisan queue:work redis --sleep=3 --tries=3
+    volumes:
+      - .:/var/www
+    networks:
+      - medivault_network
+    depends_on:
+      - app
+      - redis
+
+volumes:
+  medivault_db_data:
+
+networks:
+  medivault_network:
+    driver: bridge
