@@ -130,11 +130,11 @@
             @if ($records->onFirstPage())
                 <span class="btn btn-secondary btn-sm" style="opacity:.5;cursor:not-allowed;">‹ Prev</span>
             @else
-                <a href="{{ $records->previousPageUrl() }}&{{ http_build_query(request()->except('page')) }}" class="btn btn-secondary btn-sm">‹ Prev</a>
+                <a href="{{ $records->appends(request()->except('page'))->previousPageUrl() }}" class="btn btn-secondary btn-sm">‹ Prev</a>
             @endif
             <span class="btn btn-secondary btn-sm">Page {{ $records->currentPage() }} / {{ $records->lastPage() }}</span>
             @if ($records->hasMorePages())
-                <a href="{{ $records->nextPageUrl() }}&{{ http_build_query(request()->except('page')) }}" class="btn btn-secondary btn-sm">Next ›</a>
+                <a href="{{ $records->appends(request()->except('page'))->nextPageUrl() }}" class="btn btn-secondary btn-sm">Next ›</a>
             @else
                 <span class="btn btn-secondary btn-sm" style="opacity:.5;cursor:not-allowed;">Next ›</span>
             @endif

@@ -138,12 +138,19 @@
         container.querySelectorAll('.tag-chip').forEach(el => el.remove());
         hiddenContainer.innerHTML = '';
         tags.forEach(tag => {
-            // Add chip to visible area
+            // Add chip to visible area using createElement (avoids innerHTML XSS)
             const chip = document.createElement('span');
             chip.className = 'tag-chip';
             chip.dataset.tag = tag;
             chip.style.cssText = 'display:inline-flex;align-items:center;gap:.25rem;background:#faf5ff;color:#7c3aed;border:1px solid #ddd6fe;padding:.125rem .5rem;border-radius:9999px;font-size:.8rem;';
-            chip.innerHTML = tag + '<button type="button" onclick="removeTag(\'' + tag.replace(/'/g, "\\'") + '\')" style="border:none;background:none;cursor:pointer;color:#9ca3af;line-height:1;padding:0;font-size:.9rem;">×</button>';
+            const label = document.createTextNode(tag);
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.style.cssText = 'border:none;background:none;cursor:pointer;color:#9ca3af;line-height:1;padding:0;font-size:.9rem;';
+            btn.textContent = '×';
+            btn.addEventListener('click', function () { window.removeTag(tag); });
+            chip.appendChild(label);
+            chip.appendChild(btn);
             container.insertBefore(chip, input);
             // Add hidden input
             const hidden = document.createElement('input');
@@ -163,7 +170,7 @@
         }
     }
 
-    window.removeTag = function(tag) {
+    window.removeTag = function (tag) {
         tags.delete(tag);
         renderChips();
     };

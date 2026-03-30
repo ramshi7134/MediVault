@@ -173,11 +173,18 @@
 <script>
 function copyShare() {
     var el = document.getElementById('share-url');
-    el.select();
-    document.execCommand('copy');
     var btn = el.nextElementSibling;
-    btn.textContent = 'Copied!';
-    setTimeout(function() { btn.textContent = 'Copy'; }, 2000);
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(el.value).then(function () {
+            btn.textContent = 'Copied!';
+            setTimeout(function () { btn.textContent = 'Copy'; }, 2000);
+        });
+    } else {
+        el.select();
+        document.execCommand('copy');
+        btn.textContent = 'Copied!';
+        setTimeout(function () { btn.textContent = 'Copy'; }, 2000);
+    }
 }
 </script>
 @endsection
