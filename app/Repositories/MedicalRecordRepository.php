@@ -32,6 +32,9 @@ class MedicalRecordRepository
         if (! empty($filters['family_member_id'])) {
             $query->where('family_member_id', $filters['family_member_id']);
         }
+        if (! empty($filters['group'])) {
+            $query->where('group', $filters['group']);
+        }
 
         return $query->paginate(15);
     }
@@ -59,6 +62,15 @@ class MedicalRecordRepository
         return MedicalRecord::with(['familyMember', 'prescriptions'])
             ->where('user_id', $userId)
             ->orderByDesc('visit_date')
+            ->get();
+    }
+
+    public function getGroupForUser(int $userId, string $group): Collection
+    {
+        return MedicalRecord::with(['familyMember', 'prescriptions'])
+            ->where('user_id', $userId)
+            ->where('group', $group)
+            ->orderBy('visit_date')
             ->get();
     }
 }

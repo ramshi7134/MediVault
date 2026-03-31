@@ -26,6 +26,7 @@ class MedicalRecord extends Model
         'extracted_text',
         'ocr_status',
         'tags',
+        'group',
     ];
 
     protected function casts(): array

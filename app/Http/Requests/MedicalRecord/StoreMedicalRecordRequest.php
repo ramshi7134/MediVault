@@ -23,6 +23,7 @@ class StoreMedicalRecordRequest extends FormRequest
             'file'             => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:20480'],
             'tags'             => ['nullable', 'array'],
             'tags.*'           => ['string', 'max:50'],
+            'group'            => ['nullable', 'string', 'max:255'],
         ];
     }
 }

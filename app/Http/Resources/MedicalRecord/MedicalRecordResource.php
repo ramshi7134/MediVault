@@ -24,6 +24,7 @@ class MedicalRecordResource extends JsonResource
             'ocr_status'     => $this->ocr_status,
             'extracted_text' => $this->whenNotNull($this->extracted_text),
             'tags'           => $this->tags ?? [],
+            'group'          => $this->group,
             'family_member'  => new FamilyMemberResource($this->whenLoaded('familyMember')),
             'prescriptions'  => PrescriptionResource::collection($this->whenLoaded('prescriptions')),
             'created_at'     => $this->created_at->toISOString(),
